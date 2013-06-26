@@ -25,11 +25,6 @@ platforms:
     box_url: https://opscode-vm.s3.amazonaws.com/vagrant/opscode_centos-5.9_provisionerless.box
 
 suites:
-- name: zenoss_client
-  run_list: 
-  - recipe[minitest-handler]
-  - recipe[zenoss]
-  attributes: {}
 - name: zenoss_core3
   run_list: 
   - recipe[minitest-handler]
