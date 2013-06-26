@@ -22,6 +22,50 @@ require 'chef/mixin/shell_out'
 require 'chef/mixin/language'
 include Chef::Mixin::ShellOut
 
+
+  # Return a list of of installed Zenpacks, using local cache when possible
+  # 
+  # @return [Array]  List of installed zenpacks
+  def installed_zenpacks
+    # Return the list from memory, if it found, otherwise refresh the list
+    node.run_state[:installed_zenpacks] ||= refresh_zenpack_list()
+
+
+  end
+  
+  
+  # Refresh the list of installed Zenpacks
+  #
+   # @return [Hash]  of installed zenpacks, along with additional metadata
+  def refresh_zenpack_list
+    Chef::Log.debug("Refreshing Zenpack List")
+    packs = {}
+    zp_out = shell_out("sudo -u zenoss -i #{node['zenoss']['server']['zenhome']}/bin/zenpack --list")
+    zps = zp_out.stdout.split("\n")
+    zps.each do |zp|
+      puts "*" * 60
+      zp_name = zp.split(" ").first
+      unless zp_name.nil?
+        packs[zp_name] = {}
+        
+        # Try and figure out the version, for the potential of later adding
+        # an upgrade action
+        zp_version = zp.scan(/#{zp_name}-(.*?)-py/).first
+        unless zp_version.nil? || zp_version.empty?
+          packs[zp_name][:version] = zp_version.first
+        end
+        
+        # try and determine the installation path
+        zp_path = zp.scan(/\((\/.*?)\)/).first
+        unless zp_path.nil? || zp_path.empty?
+          packs[zp_name][:path] = zp_path.first
+        end
+      end
+    end
+    node.run_state[:installed_zenpacks] = packs
+  end
+
+
 action :install do
   unless @zenpack.exists
     zpfile = "#{new_resource.package}-#{new_resource.version}-#{new_resource.py_version}.egg"
@@ -29,6 +73,7 @@ action :install do
     #download the ZenPack
     zpfile_path = ::File.join(Chef::Config[:file_cache_path], zpfile)
     remote_file zpfile_path do
+      # TODO - Fix This: http://tickets.opscode.com/browse/COOK-3107
       source "http://dev.zenoss.com/zenpacks/#{zpfile}"
       mode "0644"
       action :create
@@ -45,6 +90,7 @@ action :install do
       command "#{node['zenoss']['server']['zenhome']}/bin/zenpack --install=#{zpfile}"
       action :run
     end
+    refresh_zenpack_list()
     new_resource.updated_by_last_action(true)
   end
 end
@@ -62,6 +108,10 @@ action :remove do
       command "#{node['zenoss']['server']['zenhome']}/bin/zenpack --remove=#{new_resource.package}"
       action :run
     end
+    
+    # Remove the pack from the cached list, rather than shelling out to rebuild
+    # the list
+    node.run_state[:installed_zenpacks].delete(new_resource.name)
     new_resource.updated_by_last_action(true)
   end
 end
@@ -70,7 +120,6 @@ end
 def load_current_resource
   @zenpack = Chef::Resource::ZenossZenpack.new(new_resource.package)
   Chef::Log.debug("Checking for ZenPack #{new_resource.name}")
-  zp = shell_out("sudo -u zenoss -i #{node['zenoss']['server']['zenhome']}/bin/zenpack --list")
-  exists = zp.stdout.include?(new_resource.package)
+  exists = installed_zenpacks().has_key?(new_resource.name)
   @zenpack.exists(exists)
 end
