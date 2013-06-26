@@ -63,7 +63,7 @@ action :run do
       #set the Location & Groups
       devlocation = ""
       devgroups = "setGroups=["
-      device.roles.sort!.each do |role|
+      device.roles.sort.each do |role|
         if locations.member?(role)
           devlocation = "setLocation=\"/#{role}\", "
         elsif groups.member?(role)
