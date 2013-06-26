@@ -18,6 +18,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+class Chef::Recipe
+ include ZenossHelper
+end
+
+# Lets gracefully handle when running on known unsupported platforms
+if supported_zenoss_platform? == false
+  msg = "Sorry, running Zenoss #{node['zenoss']['server']['version']} on" +
+    " #{node['platform']} version #{node['platform_version']} is know to" +
+    " work properly. Skipping installation and configuration"
+  Chef::Log.warn(msg)
+  return
+end
+
 
 case node['platform']
 when "centos","redhat","scientific"
@@ -142,7 +155,8 @@ ruby_block "zenoss public key" do
   block do
     pubkey = IO.read("/home/zenoss/.ssh/id_dsa.pub")
     node.set["zenoss"]["server"]["zenoss_pubkey"] = pubkey
-    node.save
+    #Skip the node.save on solo
+    node.save unless Chef::Config[:solo]
     #write out the authorized_keys for the zenoss user
     ak = File.new("/home/zenoss/.ssh/authorized_keys", "w+")
     ak.puts pubkey
@@ -183,34 +197,43 @@ end
 devices = {}
 locations = {}
 groups = {}
-search(:role, "*:*").each do |role|
-  if role.override_attributes['zenoss'] and role.override_attributes['zenoss']['device']
-    if role.override_attributes['zenoss']['device']['device_class']
-      #add the role as a Device Class
-      Chef::Log.debug "deviceclass from role:#{role.name}:#{role.override_attributes['zenoss']['device']['device_class']}"
-      devices[role.override_attributes['zenoss']['device']['device_class']] = {
-        'description' => role.description,
-        'modeler_plugins' => role.default_attributes['zenoss']['device']['modeler_plugins'],
-        'templates' => role.default_attributes['zenoss']['device']['templates'],
-        'properties' => role.default_attributes['zenoss']['device']['properties'],
-        'nodes' => []
-      }
-    elsif role.override_attributes['zenoss']['device']['location']
-      #add the role as a Location
-      locations[role.name] = {
-        'location' => role.override_attributes['zenoss']['device']['location'],
-        'description' => role.description,
-        'address' => role.override_attributes['zenoss']['device']['address']
-      }
+if Chef::Config[:solo]
+  Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
+else
+  search(:role, "*:*").each do |role|
+    if role.override_attributes['zenoss'] and role.override_attributes['zenoss']['device']
+      if role.override_attributes['zenoss']['device']['device_class']
+        #add the role as a Device Class
+        Chef::Log.debug "deviceclass from role:#{role.name}:#{role.override_attributes['zenoss']['device']['device_class']}"
+        devices[role.override_attributes['zenoss']['device']['device_class']] = {
+          'description' => role.description,
+          'modeler_plugins' => role.default_attributes['zenoss']['device']['modeler_plugins'],
+          'templates' => role.default_attributes['zenoss']['device']['templates'],
+          'properties' => role.default_attributes['zenoss']['device']['properties'],
+          'nodes' => []
+        }
+      elsif role.override_attributes['zenoss']['device']['location']
+        #add the role as a Location
+        locations[role.name] = {
+          'location' => role.override_attributes['zenoss']['device']['location'],
+          'description' => role.description,
+          'address' => role.override_attributes['zenoss']['device']['address']
+        }
+      end
+    else
+      #create Groups for the rest of the roles
+      groups[role.name] = {'description' => role.description}
     end
-  else
-    #create Groups for the rest of the roles
-    groups[role.name] = {'description' => role.description}
   end
 end
 
 #all nodes with zenoss:device
-nodes = search(:node, 'zenoss:device*') || []
+if Chef::Config[:solo]
+  Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
+  nodes = []
+else
+  nodes = search(:node, 'zenoss:device*') || []
+end
 #find the recipes and create Systems for them
 systems = []
 nodes.each {|node| systems.push(node.expand!.recipes)}
