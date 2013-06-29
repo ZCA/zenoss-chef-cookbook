@@ -1,6 +1,6 @@
 name             "zenoss"
-maintainer       "Opscode, Inc."
-maintainer_email "cookbooks@opscode.com"
+maintainer       "David Petzel"
+maintainer_email "davidpetzel@gmail.com"
 license          "Apache 2.0"
 description      "Installs and configures Zenoss and registers nodes as devices"
 version          "1.0.0"
