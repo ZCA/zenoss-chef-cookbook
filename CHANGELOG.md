@@ -1,4 +1,14 @@
 
+## v1.1.0
+- [#1](https://github.com/ZCA/zenoss-chef-cookbook/issues/1) -
+  Fix `ImmutableAttributeModification` error on Chef 11
+- [#6](https://github.com/ZCA/zenoss-chef-cookbook/issues/1 -
+  Adding Test Kitchen Support
+- [#7](https://github.com/ZCA/zenoss-chef-cookbook/issues/7) -
+  Enabling Caching of ZenPack listing to speed up runs
+- [#8](https://github.com/ZCA/zenoss-chef-cookbook/issues/8) -
+  Update maintainer information to reflect move away from Opscode
+
 ## v1.0.0
 - Locking in a version to handle the transition of the previously 
   "opscode managed" code base, to the now community maintained code base.
