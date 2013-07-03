@@ -19,49 +19,6 @@
 # limitations under the License.
 #
 
-include_recipe "openssh"
-
-#create a 'zenoss' user for monitoring
-user "zenoss" do
-  comment "Zenoss monitoring account"
-  home "/home/zenoss" unless node["os"] == "windows"
-  supports :manage_home => true unless node["os"] == "windows"
-  shell "/bin/bash" unless node["os"] == "windows"
-  action :create
-end
-
-#create a home directory for them
-directory "/home/zenoss/.ssh" do
-  owner "zenoss"
-  mode "0700"
-  action :create
-  not_if { node["os"] == "windows" }
-end
-
-#get the zenoss user public key via search
-if Chef::Config["solo"]
-  Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
-  server = []
-else
-  server = search(:node, 'recipes:zenoss\:\:server') || []
-end
-
-
-if server.length > 0
-  zenoss = server[0]["zenoss"]
-  if zenoss["server"] and zenoss["server"]["zenoss_pubkey"]
-    pubkey = zenoss["server"]["zenoss_pubkey"]
-    file "/home/zenoss/.ssh/authorized_keys" do
-      backup false
-      owner "zenoss"
-      mode "0600"
-      content pubkey
-      action :create
-      not_if { node["os"] == "windows" }
-    end
-  else
-    Chef::Log.info("No Zenoss server found, device is unmonitored.")
-  end
-else
-  Chef::Log.info("No Zenoss server found, device is unmonitored.")
-end
+# Provide some semblance of backward compat now that the client
+# stuff is moved to its own cookbook
+include_recipe "zenoss_client"

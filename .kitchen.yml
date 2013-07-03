@@ -3,7 +3,10 @@ driver_plugin: vagrant
 driver_config:
   customize:
     # Zenoss doesn't do well with the default 256MB
-    memory: 1024
+    # Avoid OSError: [Errno 12] Cannot allocate memory when starting Zenoss
+    # TODO - Core 3 has far less requirements. Figure out if its possible
+    # to only have the really high memory amount on Core4 suite instances
+    memory: 3072
   require_chef_omnibus: true
 
 platforms:
@@ -33,3 +36,13 @@ suites:
     zenoss:
       server:
         version: "3.2.1-0"
+- name: zenoss_core4
+  run_list: 
+  - recipe[minitest-handler]
+  - recipe[zenoss::server]
+  attributes:
+    zenoss:
+      server:
+        version: "4.2.3"
+    minitest:
+      filter: /zenoss/

@@ -11,7 +11,10 @@ module ZenossHelper
         supported_platform = true if node['platform_family'] == "rhel" and node['platform_version'].to_i == 5
         supported_platform = true if node['platform'] == "ubuntu" and node['platform_version'] == 10
       when 4
-        #Coming Soon
+        # Core 4 only supports 64 bit, your out of luck on 32 bit
+        if node['kernel']['machine'] == "x86_64"
+          supported_platform = true if node['platform_family'] == "rhel" and node['platform_version'].to_i >= 5
+        end
     end
     return supported_platform
   end
