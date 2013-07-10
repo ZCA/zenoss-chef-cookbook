@@ -1,8 +1,7 @@
-
 ## v1.1.0
 - [#1](https://github.com/ZCA/zenoss-chef-cookbook/issues/1) -
   Fix `ImmutableAttributeModification` error on Chef 11
-- [#6](https://github.com/ZCA/zenoss-chef-cookbook/issues/1 -
+- [#6](https://github.com/ZCA/zenoss-chef-cookbook/issues/6) -
   Adding Test Kitchen Support
 - [#7](https://github.com/ZCA/zenoss-chef-cookbook/issues/7) -
   Enabling Caching of ZenPack listing to speed up runs
