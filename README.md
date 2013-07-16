@@ -56,11 +56,12 @@ that Zenoss will on. As its made available on other platforms this cookbook
 will hopefully keep up. To make things a little easier the following table
 should help to Identify what versions are supported on which platforms
 
-|                       |Core 4|Core 3|
-|-------------------|---------|----------|
-|Ubuntu 10.04    |         | X       |
-|RHEL/Centos 5 | X      | X       |
-|RHEL/Centos 6 | X      |          |
+<table>
+<tr><th></th><th>Core 4</th><th>Core3</th></tr>
+<tr><td>Ubuntu 10.04</td><td></td><td>X</td></tr>
+<tr><td>RHEL/Centos 5</td><td>X</td><td>X</td></tr>
+><tr><td>RHEL/Centos 6</td><td>X</td><td></td></tr>
+</table>
 
 
 ## Attributes
