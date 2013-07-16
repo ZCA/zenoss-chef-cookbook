@@ -30,7 +30,6 @@
   
 - Managing Core 4 installations is now supported
 
-
 ## v1.1.0
 
 - [#1](https://github.com/ZCA/zenoss-chef-cookbook/issues/1) -
