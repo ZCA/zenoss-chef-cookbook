@@ -4,7 +4,6 @@ package "java-openjdk" do
 end
 
 # Install Java. Zenoss requires that it be Oracle
-node.default['java']['oracle']['accept_oracle_download_terms'] = true
 node.default['java']['install_flavor'] = "oracle"
 node.default['java']['jdk_version'] = '6'
 

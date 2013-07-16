@@ -8,6 +8,8 @@ default['zenoss']['core4']['rabbitmq']['version'] = "2.8.6"
 default['zenoss']['core4']['rrdtool']['version'] = "1.4.7"
 
 # In the off chance you want to pull the RPM from somewhere else...
+# If you set this value to anything other than nil, this URL will be used
+# instead of the SourceForge URL
 default['zenoss']['core4']['rpm_url'] = nil
 
 #What version of nagios-plugins to install

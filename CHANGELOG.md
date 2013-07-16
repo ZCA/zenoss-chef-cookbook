@@ -1,8 +1,41 @@
 
+## v2.0.0
+
+### Breaking Changes
+
+- The functionality of the `zenoss::client` has been moved out to
+  a new dedicated [zenoss_client cookbook](http://community.opscode.com/cookbooks/zenoss_client)
+  
+- Default installation version has been increased to Core 4
+
+- The hash value for `node['zenoss']['server']['installed_zenpacks']`
+  has been cleared. The ZenPacks that were previously set here
+  have equivalent ZenPacks now included by default. For those that need an easy
+  reference the previous value was:
+
+        "ZenPacks.zenoss.DeviceSearch" => "1.0.0",
+        "ZenPacks.zenoss.LinuxMonitor"  => "1.1.5",
+        "ZenPacks.community.MySQLSSH"  => "0.4",
+
+- The inclusion of the SNMP cookbook is no longer included by this cookbook.
+  While using Zenoss to poll SNMP is a **very** common setup, enforcing its 
+  inclusion would alienate users who might to use direct SSH instead of SNMP.
+  
+### Enhancements
+
+- Updates were made that should help reduce or eliminate the
+  requirements on using search. Previous versions had a few
+  hard coded requirements. Now the cookbook will attempt to 
+  apply some sane actions when search is not available
+  
+- Managing Core 4 installations is now supported
+
+
 ## v1.1.0
+
 - [#1](https://github.com/ZCA/zenoss-chef-cookbook/issues/1) -
   Fix `ImmutableAttributeModification` error on Chef 11
-- [#6](https://github.com/ZCA/zenoss-chef-cookbook/issues/1 -
+- [#6](https://github.com/ZCA/zenoss-chef-cookbook/issues/6) -
   Adding Test Kitchen Support
 - [#7](https://github.com/ZCA/zenoss-chef-cookbook/issues/7) -
   Enabling Caching of ZenPack listing to speed up runs

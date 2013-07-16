@@ -19,6 +19,9 @@
 # limitations under the License.
 #
 
+
 # Provide some semblance of backward compat now that the client
 # stuff is moved to its own cookbook
+Chef::Log.warn("Usage of #{cookbook_name}::#{recipe_name}" +
+ " is deprecated. Please use zenoss_client::default instead")
 include_recipe "zenoss_client"

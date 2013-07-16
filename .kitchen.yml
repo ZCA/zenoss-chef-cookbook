@@ -36,6 +36,9 @@ suites:
     zenoss:
       server:
         version: "3.2.1-0"
+    java:
+      oracle:
+        accept_oracle_download_terms: true
 - name: zenoss_core4
   run_list: 
   - recipe[minitest-handler]
@@ -43,6 +46,9 @@ suites:
   attributes:
     zenoss:
       server:
-        version: "4.2.3"
+        version: "4.2.4"
+    java:
+      oracle:
+        accept_oracle_download_terms: true
     minitest:
       filter: /zenoss/

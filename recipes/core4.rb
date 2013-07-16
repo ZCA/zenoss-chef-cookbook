@@ -11,14 +11,12 @@ include_recipe "selinux::disabled"
 #We are going need stuff from all over the internet.... OK, maybe just a few 
 #places, buts its more than a single repo... Ideally some day all the packages
 #we need will end up in one location...
+
 include_recipe "yum::epel"
-
-include_recipe "zenoss::java"
-
+include_recipe "#{cookbook_name}::java"
 include_recipe "#{cookbook_name}::rrdtool"
-
-# Install MySQL
-include_recipe "zenoss::mysql55"
+include_recipe "#{cookbook_name}::mysql55"
+include_recipe "#{cookbook_name}::redis"
 
 # Install RabbitMQ
 # per Zenoss install guide section 3.2.3. Remove Conflicting Messaging Systems
@@ -28,6 +26,13 @@ include_recipe "zenoss::mysql55"
   end
 end
 node.default['rabbitmq']['version'] = node['zenoss']['core4']['rabbitmq']['version'] 
+# On the surface this appears redundant, but at the time during testing, I noticed that even though
+# we were setting 2.8.7 as the requested version, 3.x was being downloaded and installed and I
+# Believe that is because of self-referencing attributes in the rabbitmq default attributes file. It appears
+# that even though we are changing the value here in this recipe, that override happens after the URL
+# was evaluatied, so reset the package URL location to ensure we get the version we want
+# This is an exact lift from the attribute file...
+node.default['rabbitmq']['package'] = "https://www.rabbitmq.com/releases/rabbitmq-server/v#{node['rabbitmq']['version']}/rabbitmq-server-#{node['rabbitmq']['version']}-1.noarch.rpm"
 include_recipe "rabbitmq"
 
 package "nagios-plugins" do

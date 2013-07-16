@@ -22,12 +22,21 @@ class Chef::Recipe
  include ZenossHelper
 end
 
+unless node['java']['oracle']['accept_oracle_download_terms'] == true
+  Chef::log.error("You have not accepted the Java License Agreement" + 
+   " Please see the usage instructions of this cookbook for more " +
+   " details.")
+   return
+end
+
+include_recipe "#{cookbook_name}::default"
+
 # Lets gracefully handle when running on known unsupported platforms
 if supported_zenoss_platform? == false
   msg = "Sorry, running Zenoss #{node['zenoss']['server']['version']} on" +
     " #{node['platform']} version #{node['platform_version']} is know to" +
     " work properly. Skipping installation and configuration"
-  Chef::Log.warn(msg)
+  Chef::Log.error(msg)
   return
 end
 
@@ -41,3 +50,6 @@ case node['zenoss']['server']['version'].to_i
       "Please set node['zenoss']['server']['version'] to a valid version"
     Chef::Log::warn(msg)
 end
+
+include_recipe "#{cookbook_name}::configure_admin_user"
+include_recipe "#{cookbook_name}::configure_smtp_settings"

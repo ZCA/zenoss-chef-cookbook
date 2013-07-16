@@ -19,19 +19,27 @@
 # limitations under the License.
 #
 
+# TODO - Does this really belong here?
 ::Chef::Node.send(:include, Opscode::OpenSSL::Password)
-
 set_unless['zenoss']['server']['admin_password'] = secure_password
 
-default['zenoss']['device']['device_class']    = "/Discovered" #overwritten by roles or on nodes
-default['zenoss']['device']['location']        = "" #overwritten by roles or on nodes
-default['zenoss']['device']['modeler_plugins'] = [] #overwritten by roles or on nodes
-default['zenoss']['device']['properties']      = {} #overwritten by roles or on nodes
-default['zenoss']['device']['templates']       = [] #overwritten by roles or on nodes
-default['zenoss']['server']['version']         = "3.2.1-0"
-default['zenoss']['server']['zenoss_pubkey']   = "" #gets set in the server recipe, read by clients
-default['zenoss']['server']['skip_setup_wizard'] = true	#Will skip the setup wizard
+
+
+# The version of Zenoss to install
+default['zenoss']['server']['version']         = "4.2.4"
+
+# The Public key. The server recipe will generate this if it doesn't
+# already exist, and clients will read this value and setup authorized
+# keys
+default['zenoss']['server']['zenoss_pubkey']   = ""
+
+# Should the setup wizard be skipped
+default['zenoss']['server']['skip_setup_wizard'] = true
+
+# The TCP port on which Zope will listen
 default['zenoss']['server']['http_port'] = 8080 #The tcp port which zope listens on
+
+# The location of zenhome
 case node['platform']
 when "ubuntu","debian"
   default['zenoss']['server']['zenhome']         = "/usr/local/zenoss/zenoss" #RPM is different
@@ -53,23 +61,17 @@ default['zenoss']['client']['zenoss_user_homedir'] = "/home/zenoss"
 default['zenoss']['client']['create_local_zenoss_user'] = true
 
 
-
-
-
-#it might matter that these get ordered eventually
-default['zenoss']['server']['installed_zenpacks'] = {
-  "ZenPacks.zenoss.DeviceSearch" => "1.0.0",
-  "ZenPacks.zenoss.LinuxMonitor"  => "1.1.5",
-  "ZenPacks.community.MySQLSSH"  => "0.4",
-}
+# A Hash of ZenPacks to install. Newer versions of Zenoss
+# Come with many of the Core 4 ZenPacks already installed.
+# The format of the hash should be
+# { "ZenPacks.zenoss.PackName" => "1.0.0",}
+default['zenoss']['server']['installed_zenpacks'] = {}
 
 #patches from http://dev.zenoss.com/trac/report/6 marked 'closed'
 #it might matter that these get ordered eventually as well
-default['zenoss']['server']['zenpatches'] = {
+default['zenoss']['server']['zenpatches'] = {}
 
-}
-
-#SMTP/Email Configuration information
+# SMTP/Email Configuration information
 default['zenoss']['server']['smtp']['smtpHost'] = "localhost"
 default['zenoss']['server']['smtp']['smtpPort'] = "25"
 default['zenoss']['server']['smtp']['smtpUser'] = ""
@@ -78,5 +80,26 @@ default['zenoss']['server']['smtp']['emailFrom'] = "zenoss@#{node['fqdn']}"
 # Careful with this one, It needs to be True/False to match Python's booleans, not Ruby's
 default['zenoss']['server']['smtp']['smtpUseTLS'] = "False"
 
-#Performance Tweaks
+# Performance Tweaks
 default['zenoss']['server']['performance']['max_file_descriptors'] = 10240
+
+
+# Attributes Related to Monitored Devices  
+
+# The device class of a node.
+default['zenoss']['device']['device_class'] = "/Discovered"
+
+# The location in which to assign a Device
+default['zenoss']['device']['location'] = ""
+
+# A list of modeler plugins to assign to a node.
+# In general its advisable to set these on a device class, and avoid
+# Using this to assign them directly to a node
+default['zenoss']['device']['modeler_plugins'] = []
+
+# A set of properties to assign to a node
+default['zenoss']['device']['properties'] = {}
+
+# A set of RRD(Monitoring) Templats to apply to a node. In general
+# its advised to set this at the device class instead
+default['zenoss']['device']['templates'] = []
