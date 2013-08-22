@@ -23,7 +23,7 @@ class Chef::Recipe
 end
 
 unless node['java']['oracle']['accept_oracle_download_terms'] == true
-  Chef::log.error("You have not accepted the Java License Agreement" + 
+  Chef::Log.error("You have not accepted the Java License Agreement" + 
    " Please see the usage instructions of this cookbook for more " +
    " details.")
    return
