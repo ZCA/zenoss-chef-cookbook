@@ -22,7 +22,7 @@ class Chef::Recipe
  include ZenossHelper
 end
 
-unless node['java']['oracle']['accept_oracle_download_terms'] == true || node['java']['oracle']['accept_oracle_download_terms'] == "true"
+unless node['java']['oracle']['accept_oracle_download_terms'] == true
   Chef::Log.error("You have not accepted the Java License Agreement" + 
    " Please see the usage instructions of this cookbook for more " +
    " details.")
