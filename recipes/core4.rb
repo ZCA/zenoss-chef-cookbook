@@ -8,9 +8,9 @@
 # Start by disabling SELinux
 include_recipe "selinux::disabled"
 
-#We are going need stuff from all over the internet.... OK, maybe just a few 
-#places, buts its more than a single repo... Ideally some day all the packages
-#we need will end up in one location...
+# We are going need stuff from all over the internet.... OK, maybe just a few 
+# places, buts its more than a single repo... Ideally some day all the packages
+# we need will end up in one location...
 
 include_recipe "yum::epel"
 include_recipe "#{cookbook_name}::java"
@@ -39,21 +39,30 @@ package "nagios-plugins" do
   action :install
 end
 
-#Now onto Zenoss
+# Now onto Zenoss
 zenver = node['zenoss']['server']['version']
 elmver= node['platform_version'].to_i #Enterprise Linux Major Version
-sf_base_url = "http://sourceforge.net/projects/zenoss/files/zenoss-4.2/"
-rpm_file = "zenoss_core-#{zenver}.el#{elmver}.x86_64.rpm"
-rpm_dl_path = ::File.join(Chef::Config[:file_cache_path], rpm_file)
-
+sf_base_url = "http://sourceforge.net/projects/zenoss/files/zenoss-4.2"
 if node['zenoss']['core4']['rpm_url'] .nil?
-  rpm_url = "#{sf_base_url}/zenoss-#{zenver}/#{rpm_file}/download"
+  case zenver
+    # http://sourceforge.net/projects/zenoss/files/zenoss-4.2/zenoss-4.2.0/zenoss-4.2.0.el6.x86_64.rpm/download
+    # http://sourceforge.net/projects/zenoss/files/zenoss-4.2/zenoss-4.2.3/zenoss_core-4.2.3.el6.x86_64.rpm/download
+    # http://sourceforge.net/projects/zenoss/files/zenoss-4.2/zenoss-4.2.4/4.2.4-1897/zenoss_core-4.2.4-1897.el6.x86_64.rpm/download
+    when "4.2.4"
+      build = 1897
+      rpm_file = "zenoss_core-#{zenver}-#{build}.el#{elmver}.x86_64.rpm"
+      rpm_url = "#{sf_base_url}/zenoss-#{zenver}/#{zenver}-#{build}/#{rpm_file}/download"
+    else
+      rpm_file = "zenoss_core-#{zenver}.el#{elmver}.x86_64.rpm"
+      rpm_url = "#{sf_base_url}/zenoss-#{zenver}/#{rpm_file}/download"
+  end
 else
   rpm_url = node['zenoss']['core4']['rpm_url'] 
 end
 
+rpm_dl_path = ::File.join(Chef::Config[:file_cache_path], rpm_file)
 remote_file rpm_dl_path do
-  #Sometimes SourceForge is finicky... retry if we fail
+  # Sometimes SourceForge is finicky... retry if we fail
   retries 1
   source rpm_url
   not_if "rpm -qa | grep zenoss-4"
@@ -74,11 +83,11 @@ end
   end
 end
 
-#Run the post_install recipe
+# Run the post_install recipe
 include_recipe "#{cookbook_name}::post_install"
 
 # The server may also be a client
 include_recipe "#{cookbook_name}::client"
 
-#Setup SSH Keys
+# Setup SSH Keys
 include_recipe "#{cookbook_name}::ssh_key_config"
