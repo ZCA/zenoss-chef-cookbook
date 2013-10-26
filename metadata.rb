@@ -11,7 +11,7 @@ depends          "yum"
 depends           "mysql"
 depends           "java"
 depends           "rabbitmq"
-depends           "selinux"
+depends           "selinux", '<= 0.5.6' # https://tickets.opscode.com/browse/COOK-3882
 depends           "zenoss_client"
 depends           "redisio"
 recipe           "zenoss", "Defaults to the client recipe."
