@@ -36,6 +36,9 @@ suites:
     zenoss:
       server:
         version: "3.2.1-0"
+      client:
+        server: "localhost"
+        port: 8080
     java:
       oracle:
         accept_oracle_download_terms: true
@@ -47,6 +50,9 @@ suites:
     zenoss:
       server:
         version: "4.2.4"
+      client:
+        server: "localhost"
+        port: 8080
     java:
       oracle:
         accept_oracle_download_terms: true
