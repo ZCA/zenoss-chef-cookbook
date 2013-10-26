@@ -9,7 +9,7 @@ module ZenossHelper
     case node['zenoss']['server']['version'].to_i
       when 3
         supported_platform = true if node['platform_family'] == "rhel" and node['platform_version'].to_i == 5
-        supported_platform = true if node['platform'] == "ubuntu" and node['platform_version'] == 10
+        supported_platform = true if node['platform'] == "ubuntu" and node['platform_version'].to_i == 10
       when 4
         # Core 4 only supports 64 bit, your out of luck on 32 bit
         if node['kernel']['machine'] == "x86_64"
