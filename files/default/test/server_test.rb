@@ -10,7 +10,7 @@ describe_recipe "zenoss::server" do
       service("zenoss").must_be_running
     end
     
-    it "sets the zenoss service to start on book" do
+    it "sets the zenoss service to start on boot" do
       skip "Not a supported platform" unless supported_zenoss_platform?
       service("zenoss").must_be_enabled
     end
