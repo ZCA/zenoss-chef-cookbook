@@ -12,7 +12,7 @@ include_recipe "selinux::disabled"
 # places, buts its more than a single repo... Ideally some day all the packages
 # we need will end up in one location...
 
-include_recipe "yum::epel"
+include_recipe "yum-epel"
 include_recipe "#{cookbook_name}::java"
 include_recipe "#{cookbook_name}::rrdtool"
 include_recipe "#{cookbook_name}::mysql55"
