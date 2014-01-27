@@ -23,15 +23,10 @@ case node['platform']
 when "centos", "redhat", "amazon", "scientific"
   package "libgcj" #moved here to make CentOS 5.6 happy (COOK-908)
 
-  yum_key "RPM-GPG-KEY-zenoss" do
-    url "http://dev.zenoss.com/yum/RPM-GPG-KEY-zenoss"
-    action :add
-  end
-
   yum_repository "zenoss" do
     description "Zenoss Stable repo"
-    key "RPM-GPG-KEY-zenoss"
-    url "http://dev.zenoss.com/yum/stable/"
+    gpgkey "http://dev.zenoss.com/yum/RPM-GPG-KEY-zenoss"
+    baseurl "http://dev.zenoss.com/yum/stable/"
     failovermethod "priority"
     action :add
   end
