@@ -19,11 +19,9 @@
 # limitations under the License.
 #
 
-# TODO - Does this really belong here?
-::Chef::Node.send(:include, Opscode::OpenSSL::Password)
-set_unless['zenoss']['server']['admin_password'] = secure_password
-
-
+# Just set the default password to zenoss, and put it in the README.
+# Thats better than setting a random admin password and not telling me what it is.
+set_unless['zenoss']['server']['admin_password'] = 'zenoss' 
 
 # The version of Zenoss to install
 default['zenoss']['server']['version'] = "4.2.4"
