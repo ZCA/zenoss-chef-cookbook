@@ -7,25 +7,25 @@ driver_config:
     # TODO - Core 3 has far less requirements. Figure out if its possible
     # to only have the really high memory amount on Core4 suite instances
     memory: 3072
-  require_chef_omnibus: '11.8.2' # redis.io breaks on 11.10.0 
+  require_chef_omnibus: '11.8.2' # redisio breaks on 11.10.0 
 
 platforms:
 - name: ubuntu-12.04
   driver_config:
-    box: opscode-ubuntu-12.04
-    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box
+    network:
+    - ["forwarded_port", {guest: 8080, host: 8080}]
 - name: ubuntu-10.04
   driver_config:
-    box: opscode-ubuntu-10.04
-    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-10.04_provisionerless.box
+    network:
+    - ["forwarded_port", {guest: 8080, host: 8081}]
 - name: centos-6.4
   driver_config:
-    box: opscode-centos-6.4
-    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_centos-6.4_provisionerless.box
+    network:
+    - ["forwarded_port", {guest: 8080, host: 8082}]
 - name: centos-5.9
   driver_config:
-    box: opscode-centos-5.9
-    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_centos-5.9_provisionerless.box
+    network:
+    - ["forwarded_port", {guest: 8080, host: 8083}]
 
 suites:
 - name: zenoss_core3
@@ -33,6 +33,10 @@ suites:
   - recipe[minitest-handler]
   - recipe[zenoss::server]
   attributes:
+    mysql:
+      server_root_password: 'test'
+      server_debian_password: 'test'
+      server_repl_password: 'test'
     zenoss:
       server:
         version: "3.2.1-0"
@@ -47,6 +51,10 @@ suites:
   - recipe[minitest-handler]
   - recipe[zenoss::server]
   attributes:
+    mysql:
+      server_root_password: 'test'
+      server_debian_password: 'test'
+      server_repl_password: 'test'
     zenoss:
       server:
         version: "4.2.4"
