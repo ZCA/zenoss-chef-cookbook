@@ -43,7 +43,7 @@ end
 zenver = node['zenoss']['server']['version']
 elmver= node['platform_version'].to_i #Enterprise Linux Major Version
 sf_base_url = "http://sourceforge.net/projects/zenoss/files/zenoss-4.2"
-if node['zenoss']['core4']['rpm_url'] .nil?
+if node['zenoss']['core4']['rpm_url'].nil?
   case zenver
     # http://sourceforge.net/projects/zenoss/files/zenoss-4.2/zenoss-4.2.0/zenoss-4.2.0.el6.x86_64.rpm/download
     # http://sourceforge.net/projects/zenoss/files/zenoss-4.2/zenoss-4.2.3/zenoss_core-4.2.3.el6.x86_64.rpm/download
@@ -69,12 +69,18 @@ remote_file rpm_dl_path do
   notifies :install, "yum_package[zenoss_core]", :immediately
 end
 
+
+
 yum_package "zenoss_core" do
   source rpm_dl_path
-  options "--nogpgcheck"
+  options "--nogpgcheck --disablerepo=rpmforge*"
   action :install
   not_if "rpm -qa | grep zenoss-4"
   only_if "test -f #{rpm_dl_path}"
+end
+
+template "/opt/zenoss/etc/global.conf" do 
+  source "global.conf.erb"
 end
 
 %w{memcached snmpd rabbitmq-server zenoss}.each do |svc|

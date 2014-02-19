@@ -27,3 +27,6 @@ default['zenoss']['core4']['rpm_url'] = nil
 #What version of nagios-plugins to install
 default['zenoss']['core4']['nagios_plugins']['version'] = "1.4.16"
 
+default['mysql']['server_debian_password'] = 'password'
+default['mysql']['server_root_password'] = 'password'
+default['mysql']['server_repl_password'] = 'password'

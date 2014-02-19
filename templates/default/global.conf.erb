@@ -8,7 +8,7 @@ zodb-db zodb
 zodb-user zenoss
 zodb-password zenoss
 zodb-admin-user root
-zodb-admin-password
+zodb-admin-password <%= node['mysql']['server_root_password'] -%> 
 zodb-cacheservers 127.0.0.1:11211
 zodb-cachesize 1000
 
@@ -28,5 +28,5 @@ zep-db zenoss_zep
 zep-user zenoss
 zep-password zenoss
 zep-admin-user root
-zep-admin-password <%= node['mysql']['server_root']['password'] -%> 
+zep-admin-password <%= node['mysql']['server_root_password'] -%> 
 zep-uri http://localhost:8084
