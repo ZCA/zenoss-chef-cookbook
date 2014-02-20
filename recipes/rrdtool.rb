@@ -11,29 +11,31 @@ if node['platform_family'] == "rhel"
   # http://jira.zenoss.com/jira/browse/ZEN-2547
   
   unless `rpm -qa | grep -i rrdtool`.include?(rrdtool_version)
-    include_recipe "yum-repoforge"
+    include_recipe 'yum-repoforge'
 
-  case node['platform_version'].to_i
-    when 6
-      rrdtool_package = "#{rrdtool_version}-1.el6.rfx"
-      rrdtool_repo = "rpmforge-extras"
-    when 5
-      rrdtool_package = "#{rrdtool_version}-1.el5.rf"
-      rrdtool_repo = "rpmforge"
-    else
-      rrdtool_package = nil
-  end
+    case node['platform_version'].to_i
+      when 6
+        rrdtool_package = "#{rrdtool_version}-1.el6.rfx"
+        rrdtool_repo = "rpmforge-extras"
+      when 5
+        rrdtool_package = "#{rrdtool_version}-1.el5.rf"
+        rrdtool_repo = "rpmforge"
+      else
+        rrdtool_package = nil
+    end
   
-  yum_package "rrdtool" do
-    version rrdtool_package
-    options "--disablerepo=epel --enablerepo=#{rrdtool_repo}"
-    flush_cache [:before]
-  end
+    yum_package "rrdtool" do
+      version rrdtool_package
+      options "--disablerepo=epel --enablerepo=#{rrdtool_repo}"
+      flush_cache [:before]
+    end
   
   end
 
-  yum_repository "rpmforge" do
-    action :remove
+  %w[rpmforge-extras rpmformge].each do |repo|
+    yum_repository repo do
+      action :remove
+    end
   end
   
 end
