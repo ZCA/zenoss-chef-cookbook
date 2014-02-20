@@ -70,7 +70,6 @@ remote_file rpm_dl_path do
 end
 
 
-
 yum_package "zenoss_core" do
   source rpm_dl_path
   options "--nogpgcheck --disablerepo=rpmforge*"
@@ -79,9 +78,9 @@ yum_package "zenoss_core" do
   only_if "test -f #{rpm_dl_path}"
 end
 
-template "/opt/zenoss/etc/global.conf" do 
-  source "global.conf.erb"
-end
+#template "/opt/zenoss/etc/global.conf" do 
+#  source "global.conf.erb"
+#end
 
 %w{memcached snmpd rabbitmq-server zenoss}.each do |svc|
   service svc do

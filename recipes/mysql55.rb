@@ -30,6 +30,15 @@ else
   node.default['mysql']['client']['packages'] = %w[mysql-community-client mysql-community-devel]
   node.default['mysql']['server']['packages'] = %w[mysql-community-libs-compat mysql-community-server]
 
+  %w[client server].each do |component|
+    node['mysql'][component]['packages'].each do |mysql_pkg|
+      package mysql_pkg
+    end
+  end
+
   # Configure MySQL server
-  include_recipe 'mysql::server'
+  # include_recipe 'mysql::server'
+  service 'mysqld' do
+    action [:enable, :start]
+  end
 end
