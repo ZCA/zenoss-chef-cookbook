@@ -31,6 +31,13 @@ is that with a few run_list changes existing users should be able to continue
 managing their 3.x installations, however it will require care, planning, and 
 testing. Please refer to the section on upgrading below.
 
+The default credentials for the application are set as follows, by the cookbook.
+You should change the password after installation.  Otherwise, override
+the attribute `zenoss['server']['admin_password']` with your preferred password.
+
+    user: admin
+    password: zenoss
+
 ## Upgrading
 Every upgrade scenario is unique in it is own way so your mileage may vary, and
 you should test your upgrade on a pre-production configuration first.
