@@ -65,7 +65,7 @@ remote_file rpm_dl_path do
   # Sometimes SourceForge is finicky... retry if we fail
   retries 1
   source rpm_url
-  not_if "rpm -qa | grep zenoss-4"
+  checksum "b3d4847c00f89cca2e1b5df5ec24297e3a18bcff0386c8bc439cd6be17fcdd56"
   notifies :install, "yum_package[zenoss_core]", :immediately
 end
 
@@ -73,8 +73,7 @@ end
 yum_package "zenoss_core" do
   source rpm_dl_path
   options "--nogpgcheck --disablerepo=rpmforge*"
-  action :install
-  not_if "rpm -qa | grep zenoss-4"
+  action :nothing
   only_if "test -f #{rpm_dl_path}"
 end
 

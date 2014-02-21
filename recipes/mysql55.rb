@@ -8,6 +8,7 @@
  }.each do |pkg|
   package pkg do
     action :purge
+	version "<5.5"
   end
 end
 
@@ -21,10 +22,13 @@ else
   # Download community repo file to Chef cache
   remote_file "#{Chef::Config['file_cache_path']}/mysql-5.5-community-repo.rpm" do
     source node['zenoss']['core4']['mysql']['community-repo-source']
+    checksum "81b2256f778bb3972054257edda2c2a82fcec455cae3d45ba9c8778a46aa8eb3"
   end
 
   # Install community repo
-  package "#{Chef::Config['file_cache_path']}/mysql-5.5-community-repo.rpm"
+  package "#{Chef::Config['file_cache_path']}/mysql-5.5-community-repo.rpm" do
+    options "--nogpgcheck"
+  end
 
   # Override Opscode package list
   node.default['mysql']['client']['packages'] = %w[mysql-community-client mysql-community-devel]
