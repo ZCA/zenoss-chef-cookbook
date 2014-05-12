@@ -42,16 +42,16 @@ end
 # Now onto Zenoss
 zenver = node['zenoss']['server']['version']
 elmver= node['platform_version'].to_i #Enterprise Linux Major Version
-sf_base_url = "http://sourceforge.net/projects/zenoss/files/zenoss-4.2"
+sf_base_url = "http://downloads.sourceforge.net/project/zenoss/zenoss-4.2"
 if node['zenoss']['core4']['rpm_url'] .nil?
   case zenver
-    # http://sourceforge.net/projects/zenoss/files/zenoss-4.2/zenoss-4.2.0/zenoss-4.2.0.el6.x86_64.rpm/download
-    # http://sourceforge.net/projects/zenoss/files/zenoss-4.2/zenoss-4.2.3/zenoss_core-4.2.3.el6.x86_64.rpm/download
-    # http://sourceforge.net/projects/zenoss/files/zenoss-4.2/zenoss-4.2.4/4.2.4-1897/zenoss_core-4.2.4-1897.el6.x86_64.rpm/download
+    # http://downloads.sourceforge.net/project/zenoss/zenoss-4.2/zenoss-4.2.0/zenoss-4.2.0.el6.x86_64.rpm
+    # http://downloads.sourceforge.net/project/zenoss/zenoss-4.2/zenoss-4.2.3/zenoss_core-4.2.3.el6.x86_64.rpm
+    # http://downloads.sourceforge.net/project/zenoss/zenoss-4.2/zenoss-4.2.4/4.2.4-1897/zenoss_core-4.2.4-1897.el6.x86_64.rpm
     when "4.2.4"
       build = 1897
       rpm_file = "zenoss_core-#{zenver}-#{build}.el#{elmver}.x86_64.rpm"
-      rpm_url = "#{sf_base_url}/zenoss-#{zenver}/#{zenver}-#{build}/#{rpm_file}/download"
+      rpm_url = "#{sf_base_url}/zenoss-#{zenver}/#{zenver}-#{build}/#{rpm_file}"
     else
       rpm_file = "zenoss_core-#{zenver}.el#{elmver}.x86_64.rpm"
       rpm_url = "#{sf_base_url}/zenoss-#{zenver}/#{rpm_file}/download"
