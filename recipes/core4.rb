@@ -5,6 +5,8 @@
 # This recipe will handle install Zenoss Core 4 on a node. This is based
 # on the official installation guide on the Zenoss website
 
+require 'uri'
+
 # Start by disabling SELinux
 include_recipe "selinux::disabled"
 
@@ -57,7 +59,8 @@ if node['zenoss']['core4']['rpm_url'] .nil?
       rpm_url = "#{sf_base_url}/zenoss-#{zenver}/#{rpm_file}/download"
   end
 else
-  rpm_url = node['zenoss']['core4']['rpm_url'] 
+  rpm_url = node['zenoss']['core4']['rpm_url']
+  rpm_file = node['zenoss']['core4']['rpm_file'] || File.basename( URI.parse(rpm_url).path ) 
 end
 
 rpm_dl_path = ::File.join(Chef::Config[:file_cache_path], rpm_file)
