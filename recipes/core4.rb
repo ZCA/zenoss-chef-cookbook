@@ -5,6 +5,8 @@
 # This recipe will handle install Zenoss Core 4 on a node. This is based
 # on the official installation guide on the Zenoss website
 
+require 'uri'
+
 # Start by disabling SELinux
 include_recipe "selinux::disabled"
 
@@ -12,7 +14,7 @@ include_recipe "selinux::disabled"
 # places, buts its more than a single repo... Ideally some day all the packages
 # we need will end up in one location...
 
-include_recipe "yum::epel"
+include_recipe "yum-epel"
 include_recipe "#{cookbook_name}::java"
 include_recipe "#{cookbook_name}::rrdtool"
 include_recipe "#{cookbook_name}::mysql55"
@@ -42,22 +44,27 @@ end
 # Now onto Zenoss
 zenver = node['zenoss']['server']['version']
 elmver= node['platform_version'].to_i #Enterprise Linux Major Version
-sf_base_url = "http://sourceforge.net/projects/zenoss/files/zenoss-4.2"
+sf_base_url = "http://downloads.sourceforge.net/project/zenoss/zenoss-4.2"
 if node['zenoss']['core4']['rpm_url'] .nil?
   case zenver
-    # http://sourceforge.net/projects/zenoss/files/zenoss-4.2/zenoss-4.2.0/zenoss-4.2.0.el6.x86_64.rpm/download
-    # http://sourceforge.net/projects/zenoss/files/zenoss-4.2/zenoss-4.2.3/zenoss_core-4.2.3.el6.x86_64.rpm/download
-    # http://sourceforge.net/projects/zenoss/files/zenoss-4.2/zenoss-4.2.4/4.2.4-1897/zenoss_core-4.2.4-1897.el6.x86_64.rpm/download
+    # http://downloads.sourceforge.net/project/zenoss/zenoss-4.2/zenoss-4.2.0/zenoss-4.2.0.el6.x86_64.rpm
+    # http://downloads.sourceforge.net/project/zenoss/zenoss-4.2/zenoss-4.2.3/zenoss_core-4.2.3.el6.x86_64.rpm
+    # http://downloads.sourceforge.net/project/zenoss/zenoss-4.2/zenoss-4.2.4/4.2.4-1897/zenoss_core-4.2.4-1897.el6.x86_64.rpm
     when "4.2.4"
       build = 1897
       rpm_file = "zenoss_core-#{zenver}-#{build}.el#{elmver}.x86_64.rpm"
-      rpm_url = "#{sf_base_url}/zenoss-#{zenver}/#{zenver}-#{build}/#{rpm_file}/download"
+      rpm_url = "#{sf_base_url}/zenoss-#{zenver}/#{zenver}-#{build}/#{rpm_file}"
+    when "4.2.5"
+      build = 2108
+      rpm_file = "zenoss_core-#{zenver}-#{build}.el#{elmver}.x86_64.rpm"
+      rpm_url = "#{sf_base_url}/zenoss-#{zenver}/#{zenver}-#{build}/#{rpm_file}"
     else
       rpm_file = "zenoss_core-#{zenver}.el#{elmver}.x86_64.rpm"
       rpm_url = "#{sf_base_url}/zenoss-#{zenver}/#{rpm_file}/download"
   end
 else
-  rpm_url = node['zenoss']['core4']['rpm_url'] 
+  rpm_url = node['zenoss']['core4']['rpm_url']
+  rpm_file = node['zenoss']['core4']['rpm_file'] || File.basename( URI.parse(rpm_url).path ) 
 end
 
 rpm_dl_path = ::File.join(Chef::Config[:file_cache_path], rpm_file)
