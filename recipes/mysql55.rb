@@ -41,6 +41,9 @@ else
     },
     "MySQL-shared" => {
       'rpm_file' => "MySQL-shared-#{mysql_ver}-1.#{el_id}#{pv}.#{arch}.rpm"
+    },
+    'MySQL-shared-compat' => {
+      'rpm_file' => "MySQL-shared-compat-#{mysql_ver}-1.#{el_id}#{pv}.#{arch}.rpm"
     }
   }
 

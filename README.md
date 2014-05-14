@@ -144,6 +144,10 @@ used by the Java cookbook and then call it.
 At the time of this writing the community MySQL cookbook didn't handle
 installing MySQL 5.5 on RHEL. This recipe will ensure a version of MySQL gets
 installed that is compatible with Zenoss Core 4.
+**NOTE** On some RHEL systems postfix is installed and depends on an early
+version of mysql which will get removed which results in postfix getting
+removed as well. If want to keep postfix on the node you will need to
+install it after mysql has been upgraded.
 
 ## Post Installation (post_install.rb)
 This recipe will run any post installation tasks that will make installing

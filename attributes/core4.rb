@@ -1,5 +1,5 @@
 # What version of MySQL should be installed
-default['zenoss']['core4']['mysql']['version'] = "5.5.28"
+default['zenoss']['core4']['mysql']['version'] = "5.5.36"
 
 #What version of RabbitMQ should be installed
 default['zenoss']['core4']['rabbitmq']['version'] = "2.8.6"

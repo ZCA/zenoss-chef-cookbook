@@ -1,6 +1,12 @@
 ## TBD
- - Default to installing 4.2.5
- - Updated to support new versions of yum cookbooks
+ - [#20](https://github.com/ZCA/zenoss-chef-cookbook/issues/20) -
+   Updated to support 4.2.5
+ - Default version changed to 4.2.5
+ - [#21](https://github.com/ZCA/zenoss-chef-cookbook/pull/21) - 
+   Updated to support new versions of yum cookbooks
+ - [#15](https://github.com/ZCA/zenoss-chef-cookbook/issues/15) - 
+   MySQL version upgraded to 5.5.36 and MySQL-shared-compat package
+   is now also installed
 
 ## v2.0.0
 
