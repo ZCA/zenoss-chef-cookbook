@@ -11,7 +11,7 @@ if node['platform_family'] == "rhel"
   # http://jira.zenoss.com/jira/browse/ZEN-2547
   
   unless `rpm -qa | grep -i rrdtool`.include?(rrdtool_version)
-    include_recipe "yum::repoforge"
+    include_recipe "yum-repoforge"
 
   case node['platform_version'].to_i
     when 6
