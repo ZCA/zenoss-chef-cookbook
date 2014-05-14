@@ -1,3 +1,6 @@
+## TBD
+ - Default to installing 4.2.5
+ - Updated to support new versions of yum cookbooks
 
 ## v2.0.0
 

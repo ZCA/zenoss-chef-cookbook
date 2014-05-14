@@ -55,12 +55,11 @@ if node['zenoss']['core4']['rpm_url'] .nil?
       rpm_file = "zenoss_core-#{zenver}-#{build}.el#{elmver}.x86_64.rpm"
       rpm_url = "#{sf_base_url}/zenoss-#{zenver}/#{zenver}-#{build}/#{rpm_file}"
     when "4.2.5"
+      sf_base_url = 'http://iweb.dl.sourceforge.net/project/zenoss/zenoss-4.2'
       build = 2108
       rpm_file = "zenoss_core-#{zenver}-#{build}.el#{elmver}.x86_64.rpm"
-      rpm_url = "#{sf_base_url}/zenoss-#{zenver}/#{zenver}-#{build}/#{rpm_file}"
+      rpm_url = "#{sf_base_url}/zenoss-#{zenver}/#{rpm_file}"
     else
-      rpm_file = "zenoss_core-#{zenver}.el#{elmver}.x86_64.rpm"
-      rpm_url = "#{sf_base_url}/zenoss-#{zenver}/#{rpm_file}/download"
   end
 else
   rpm_url = node['zenoss']['core4']['rpm_url']

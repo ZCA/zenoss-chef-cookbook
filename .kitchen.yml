@@ -99,7 +99,7 @@ suites:
   attributes:
     zenoss:
       server:
-        version: "4.2.4"
+        version: "4.2.5"
       client:
         server: "localhost"
         port: 8080

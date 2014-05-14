@@ -258,6 +258,7 @@ Zenoss 4.x release (COO-895).
 ## License and Author
 Author:: Matt Ray <matt@opscode.com>  
 Author:: David Petzel <davidpetzel@gmail.com> 
+Contributor:: Stephen Figggins <stephen.figgins@gmail.com>
 
 Copyright:: 2010, Zenoss, Inc  
 Copyright:: 2010, 2011 Opscode, Inc  
