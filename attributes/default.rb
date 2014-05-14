@@ -26,7 +26,7 @@ set_unless['zenoss']['server']['admin_password'] = secure_password
 
 
 # The version of Zenoss to install
-default['zenoss']['server']['version'] = "4.2.4"
+default['zenoss']['server']['version'] = "4.2.5"
 
 # The Public key. The server recipe will generate this if it doesn't
 # already exist, and clients will read this value and setup authorized

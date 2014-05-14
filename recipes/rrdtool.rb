@@ -6,12 +6,7 @@ rrdtool_version = node['zenoss']['core4']['rrdtool']['version']
 rrdtool_package = nil
 
 if node['platform_family'] == "rhel"
-  #We are going to pick up rrdtool from repoforge, but we only want it
-  # enabled briefly to avoid conflicts with epel later
-  # http://jira.zenoss.com/jira/browse/ZEN-2547
-  
-  unless `rpm -qa | grep -i rrdtool`.include?(rrdtool_version)
-    include_recipe "yum-repoforge"
+  include_recipe "yum-repoforge"  
 
   case node['platform_version'].to_i
     when 6
@@ -26,14 +21,10 @@ if node['platform_family'] == "rhel"
   
   yum_package "rrdtool" do
     version rrdtool_package
-    options "--disablerepo=epel --enablerepo=#{rrdtool_repo}"
+    # Disable EPEL to avoid the conflict listed in
+    # http://jira.zenoss.com/jira/browse/ZEN-2547
+    options "--disablerepo=epel"
     flush_cache [:before]
-  end
-  
-  end
-
-  yum_repository "rpmforge" do
-    action :remove
   end
   
 end
